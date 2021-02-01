@@ -19,8 +19,8 @@ class InvalidRecipe(Exception):
 
 '''
 @TODO uncomment the following line to initialize the datbase
-!! NOTE THIS WILL DROP ALL RECORDS AND START YOUR DB FROM SCRATCH
-!! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
+!! NOTE THIS WILL DROP ALL RECORDS AND START THE DB FROM SCRATCH
+!! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN AND THEN RECOMMENT IT
 '''
 #db_drop_and_create_all()
 
@@ -70,9 +70,12 @@ def get_drinks_details(payload):
 @app.route('/drinks', methods=['POST'])
 @requires_auth('post:drinks')
 def add_drink(payload):
-    print('in add_drink')
     body = request.get_json()
     drink_title = body.get('title')
+    #check for drink title, as it should be unique
+    if is_drink_title_exist(drink_title):
+        print('drink title already exists: ' + drink_title)
+        abort(422)
     drink_recipes = body.get('recipe')
     drink_recipes = verify_recipe_format(drink_recipes)
     recipes_as_string = json.dumps(drink_recipes)
@@ -108,6 +111,12 @@ def is_valid_recipe_item(recipe_item):
         return False
     return True
 
+def is_drink_title_exist(drink_title):
+    drink_exist = Drink.query.filter_by(title=drink_title).all()
+    if drink_exist == []:
+        return False
+    return True
+        
 '''
 @TODO implement endpoint
     PATCH /drinks/<id>
@@ -123,13 +132,27 @@ def is_valid_recipe_item(recipe_item):
 @requires_auth('patch:drinks')
 def update_drink(payload, drink_id):
     drink_to_be_updated = Drink.query.get(drink_id)
+    if drink_to_be_updated is None:
+        abort(404)
+    drink_to_be_updated_title = drink_to_be_updated.title
+    drink_to_be_updated_recipes = drink_to_be_updated.recipe
+
     body = request.get_json()
-    drink_title = body.get('title')
-    drink_recipes = body.get('recipe')
-    drink_recipes = verify_recipe_format(drink_recipes)
-    recipes_as_string = json.dumps(drink_recipes)
-    drink_to_be_updated.title = drink_title
-    drink_to_be_updated.recipe = recipes_as_string
+    new_title = body.get('title')
+    if new_title is not None:
+        if new_title != drink_to_be_updated_title:
+            #check for drink title, as it should be unique
+            if is_drink_title_exist(new_title):
+                abort(422)
+            drink_to_be_updated.title = new_title
+
+    new_recipes = body.get('recipe')
+    if new_recipes is not None:
+        new_recipes = verify_recipe_format(new_recipes)
+        recipes_as_string = json.dumps(new_recipes)
+        if recipes_as_string != drink_to_be_updated_recipes:
+            drink_to_be_updated.recipe = recipes_as_string
+    
     drink_to_be_updated.update()
     return jsonify({
         'success': True,
@@ -150,6 +173,8 @@ def update_drink(payload, drink_id):
 @requires_auth('delete:drinks')
 def delete_drink(payload, drink_id):
     drink = Drink.query.get(drink_id)
+    if drink is None:
+        abort(404)
     drink.delete()
     return jsonify({
         'success': True,
@@ -179,5 +204,5 @@ def handle_InvalidRecipe(error):
     return jsonify({
         "success": False, 
         "error": error.status_code,
-        "message": "Wrong recipe format: " + error.recipe
+        "message": "Wrong recipe database format: " + error.recipe
         }), error.status_code

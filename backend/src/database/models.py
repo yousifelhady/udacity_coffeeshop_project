@@ -50,7 +50,6 @@ class Drink(db.Model):
         short form representation of the Drink model
     '''
     def short(self):
-        print(json.loads(self.recipe))
         short_recipe = [{'color': r['color'], 'parts': r['parts']} for r in json.loads(self.recipe)]
         return {
             'id': self.id,
@@ -79,8 +78,11 @@ class Drink(db.Model):
             drink.insert()
     '''
     def insert(self):
-        db.session.add(self)
-        db.session.commit()
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except:
+            db.session.roll_back()
 
     '''
     delete()
@@ -91,8 +93,11 @@ class Drink(db.Model):
             drink.delete()
     '''
     def delete(self):
-        db.session.delete(self)
-        db.session.commit()
+        try:
+            db.session.delete(self)
+            db.session.commit()
+        except:
+            db.session.roll_back()
 
     '''
     update()
@@ -104,7 +109,10 @@ class Drink(db.Model):
             drink.update()
     '''
     def update(self):
-        db.session.commit()
+        try:
+            db.session.commit()
+        except:
+            db.session.roll_back()
 
     def __repr__(self):
         return json.dumps(self.short())
