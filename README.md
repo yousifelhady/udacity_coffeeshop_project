@@ -1,35 +1,60 @@
 # Coffee Shop Full Stack
 
-## Full Stack Nano - IAM Final Project
+This project is designed to be able to register new users, authenticate and authorize them using Auth0 as 3rd party authentication service.
+The project enables you to do the following:
+  1. Sign up for a certain user using Auth0 authentication service
+  2. Option to Sign up using Google mail
+  3. Ability to login through the site and have access to it after you are authenticated
+  4. The project has 2 roles:
+    4.1. Manager, who can display all drinks, add drink, update drink and delete any drink
+    4.2. Barista, who can only display drinks but without the ability to do any further action
+  5. Drinks are added and displayed by their titles and recipes, each recipe shall have a list of components from which it is composed
+  6. Drinks are displayed in colors corresponding to their recipes
+  7. Users have the ability to Logout and Login and each time they are authenticated
 
-Udacity has decided to open a new digitally enabled cafe for students to order drinks, socialize, and study hard. But they need help setting up their menu experience.
 
-You have been called on to demonstrate your newly learned skills to create a full stack drink menu application. The application must:
+## Pre-requisites to run the project
 
-1) Display graphics representing the ratios of ingredients in each drink.
-2) Allow public users to view drink names and graphics.
-3) Allow the shop baristas to see the recipe information.
-4) Allow the shop managers to create new drinks and edit existing drinks.
+1. Python 3.7 should be installed at the machine
+  Follow instructions to install the latest version of python for your platform in the [python docs](https://docs.python.org/3/using/unix.html#getting-and-installing-the-latest-version-of-python)
 
-## Tasks
+2. Clone the project's repo
 
-There are `@TODO` comments throughout the project. We recommend tackling the sections in order. Start by reading the READMEs in:
+3. Setup Virtual Enviornment
+  It is recommended to be working within a virtual environment whenever using Python for projects. This keeps the dependencies for each project separate and organaized. Instructions for setting up a virual enviornment for your platform can be found in the [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
 
-1. [`./backend/`](./backend/README.md)
-2. [`./frontend/`](./frontend/README.md)
+4. Navigate to `'/backend'` and install all project's dependencies by running this command at your CMD:
+```bash
+  pip install -r requirements.txt
+```
+##### Key Dependencies
 
-## About the Stack
+- [Flask](http://flask.pocoo.org/) is a lightweight backend microservices framework. Flask is required to handle requests and responses.
 
-We started the full stack application for you. It is desiged with some key functional areas:
+- [SQLAlchemy](https://www.sqlalchemy.org/) is the Python SQL toolkit and ORM we'll use handle the lightweight sqlite database used in that project.
 
-### Backend
+- [jose](https://python-jose.readthedocs.io/en/latest/) JavaScript Object Signing and Encryption for JWTs. Useful for encoding, decoding, and verifying JWTS.
 
-The `./backend` directory contains a partially completed Flask server with a pre-written SQLAlchemy module to simplify your data needs. You will need to complete the required endpoints, configure, and integrate Auth0 for authentication.
+5. Check `'/backend'` READMe to know how to setup and run the backend environment
 
-[View the README.md within ./backend for more details.](./backend/README.md)
+6. Check `'/frontend'` READMe to know how to setup and run the frontend environment
 
-### Frontend
 
-The `./frontend` directory contains a complete Ionic frontend to consume the data from the Flask server. You will only need to update the environment variables found within (./frontend/src/environment/environment.ts) to reflect the Auth0 configuration details set up for the backend app. 
+## Tests
 
-[View the README.md within ./frontend for more details.](./frontend/README.md)
+Under `'/backend'` there exist postman_collection.json file which include test cases for testing the backend endpoints and also included the latest test_run resulsts
+
+
+## API Reference
+
+Please check the 'README' file included in `'/backend'` folder for reference
+
+
+## Authors
+
+Software Engineer: Yousif Elhady
+
+
+## Acknowledgements
+
+Thanks to all my mentors at Udacity Web development nano-degree program
