@@ -6,8 +6,8 @@ The project enables you to do the following:
   2. Option to Sign up using Google mail
   3. Ability to login through the site and have access to it after you are authenticated
   4. The project has 2 roles:
-      4.1. Manager, who can display all drinks, add drink, update drink and delete any drink
-      4.2. Barista, who can only display drinks but without the ability to do any further action
+      - Manager, who can display all drinks, add drink, update drink and delete any drink
+      - Barista, who can only display drinks but without the ability to do any further action
   5. Drinks are added and displayed by their titles and recipes, each recipe shall have a list of components from which it is composed
   6. Drinks are displayed in colors corresponding to their recipes
   7. Users have the ability to Logout and Login and each time they are authenticated
@@ -27,6 +27,12 @@ The project enables you to do the following:
 ```bash
   pip install -r requirements.txt
 ```
+
+5. Check `'/backend'` READMe to know how to setup and run the backend environment
+
+6. Check `'/frontend'` READMe to know how to setup and run the frontend environment
+
+
 ##### Key Dependencies
 
 - [Flask](http://flask.pocoo.org/) is a lightweight backend microservices framework. Flask is required to handle requests and responses.
@@ -35,14 +41,10 @@ The project enables you to do the following:
 
 - [jose](https://python-jose.readthedocs.io/en/latest/) JavaScript Object Signing and Encryption for JWTs. Useful for encoding, decoding, and verifying JWTS.
 
-5. Check `'/backend'` READMe to know how to setup and run the backend environment
-
-6. Check `'/frontend'` READMe to know how to setup and run the frontend environment
-
 
 ## Tests
 
-Under `'/backend'` there exist postman_collection.json file which include test cases for testing the backend endpoints and also included the latest test_run resulsts
+Under `'/backend'` there exist "postman_collection.json" file which include test cases for testing the backend endpoints and also includes the latest test_run results
 
 
 ## API Reference
