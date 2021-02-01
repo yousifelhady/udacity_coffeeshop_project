@@ -74,8 +74,8 @@ def add_drink(payload):
     body = request.get_json()
     drink_title = body.get('title')
     drink_recipes = body.get('recipe')
+    drink_recipes = verify_recipe_format(drink_recipes)
     recipes_as_string = json.dumps(drink_recipes)
-    #drink_recipe = verify_recipe_format(drink_recipe)
     new_drink = Drink(title= drink_title, recipe= recipes_as_string)
     new_drink.insert()
     return jsonify({
@@ -87,18 +87,14 @@ def add_drink(payload):
 #recipe should have the following format according to number of ingredients
 #[{'color': string, 'name':string, 'parts':number}, {'color': string, 'name':string, 'parts':number}, ...]
 def verify_recipe_format(recipe):
-    print(recipe)
     if not isinstance(recipe, list) and not isinstance(recipe, dict):
-        print("not list, not dict")
-        #raise InvalidRecipe(recipe, 400)
+        raise InvalidRecipe(str(recipe), 400)
     if isinstance(recipe, list):
-        print("is list")
         for item in recipe:
             if not is_valid_recipe_item(item):
-                raise InvalidRecipe(recipe, 400)
+                raise InvalidRecipe(str(recipe), 400)
         return recipe
     elif isinstance(recipe, dict):
-        print("is dict")
         is_valid_recipe_item(recipe)
         ret = []
         ret.append(recipe)
@@ -130,8 +126,8 @@ def update_drink(payload, drink_id):
     body = request.get_json()
     drink_title = body.get('title')
     drink_recipes = body.get('recipe')
+    drink_recipes = verify_recipe_format(drink_recipes)
     recipes_as_string = json.dumps(drink_recipes)
-    #drink_recipe = verify_recipe_format(drink_recipe)
     drink_to_be_updated.title = drink_title
     drink_to_be_updated.recipe = recipes_as_string
     drink_to_be_updated.update()
