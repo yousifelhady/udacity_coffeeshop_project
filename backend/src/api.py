@@ -12,19 +12,17 @@ app = Flask(__name__)
 setup_db(app)
 CORS(app)
 
-
 class InvalidRecipe(Exception):
     def __init__(self, recipe, status_code):
         self.recipe = recipe
         self.status_code = status_code
-
 
 '''
 @TODO uncomment the following line to initialize the datbase
 !! NOTE THIS WILL DROP ALL RECORDS AND START YOUR DB FROM SCRATCH
 !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 '''
-db_drop_and_create_all()
+#db_drop_and_create_all()
 
 ## ROUTES
 '''
@@ -41,7 +39,7 @@ def get_drinks():
     return jsonify({
         'success': True,
         'drinks': [drink.short() for drink in all_drinks]
-    })
+    }), 200
 
 '''
 @TODO implement endpoint
@@ -58,7 +56,7 @@ def get_drinks_details(payload):
     return jsonify({
         'success': True,
         'drinks': [drink.long() for drink in all_drinks]
-    })
+    }), 200
 
 '''
 @TODO implement endpoint
@@ -72,20 +70,18 @@ def get_drinks_details(payload):
 @app.route('/drinks', methods=['POST'])
 @requires_auth('post:drinks')
 def add_drink(payload):
+    print('in add_drink')
     body = request.get_json()
     drink_title = body.get('title')
-    drink_recipe = body.get('recipe')
-    print(drink_recipe)
-    print(str(drink_recipe))
+    drink_recipes = body.get('recipe')
+    recipes_as_string = json.dumps(drink_recipes)
     #drink_recipe = verify_recipe_format(drink_recipe)
-    new_drink = Drink(title= drink_title, recipe= str(drink_recipe))
+    new_drink = Drink(title= drink_title, recipe= recipes_as_string)
     new_drink.insert()
-    print(new_drink)
-    print(new_drink.long())
     return jsonify({
         'success': True,
-        'drinks': new_drink.long()
-    })
+        'drinks': [new_drink.long()]
+    }), 200
 
 #recipe should be list formated
 #recipe should have the following format according to number of ingredients
@@ -127,11 +123,22 @@ def is_valid_recipe_item(recipe_item):
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the updated drink
         or appropriate status code indicating reason for failure
 '''
-# @app.route('/drinks/<int:drink_id>', methods=['PATCH'])
-# @requires_auth('patch:drinks')
-# def update_drink(payload, drink_id):
-#     drink_to_be_updated = Drink.query.get(drink_id)
-
+@app.route('/drinks/<int:drink_id>', methods=['PATCH'])
+@requires_auth('patch:drinks')
+def update_drink(payload, drink_id):
+    drink_to_be_updated = Drink.query.get(drink_id)
+    body = request.get_json()
+    drink_title = body.get('title')
+    drink_recipes = body.get('recipe')
+    recipes_as_string = json.dumps(drink_recipes)
+    #drink_recipe = verify_recipe_format(drink_recipe)
+    drink_to_be_updated.title = drink_title
+    drink_to_be_updated.recipe = recipes_as_string
+    drink_to_be_updated.update()
+    return jsonify({
+        'success': True,
+        'drinks': [drink_to_be_updated.long()]
+    }), 200
 
 '''
 @TODO implement endpoint
@@ -143,12 +150,18 @@ def is_valid_recipe_item(recipe_item):
     returns status code 200 and json {"success": True, "delete": id} where id is the id of the deleted record
         or appropriate status code indicating reason for failure
 '''
-
+@app.route('/drinks/<int:drink_id>', methods=['DELETE'])
+@requires_auth('delete:drinks')
+def delete_drink(payload, drink_id):
+    drink = Drink.query.get(drink_id)
+    drink.delete()
+    return jsonify({
+        'success': True,
+        'delete': drink_id
+    }), 200
 
 ## Error Handling
-'''
-Example error handling for unprocessable entity
-'''
+
 @app.errorhandler(HTTPException)
 def handle_HTTPException(error):
     return jsonify({
@@ -166,11 +179,9 @@ def handle_AuthExcption(error):
         }), error.status_code
 
 @app.errorhandler(InvalidRecipe)
-def handle_AuthExcption(error):
+def handle_InvalidRecipe(error):
     return jsonify({
         "success": False, 
         "error": error.status_code,
-        "message": error.recipe
+        "message": "Wrong recipe format: " + error.recipe
         }), error.status_code
-
-
