@@ -6,8 +6,8 @@ The project enables you to do the following:
   2. Option to Sign up using Google mail
   3. Ability to login through the site and have access to it after you are authenticated
   4. The project has 2 roles:
-    4.1. Manager, who can display all drinks, add drink, update drink and delete any drink
-    4.2. Barista, who can only display drinks but without the ability to do any further action
+      4.1. Manager, who can display all drinks, add drink, update drink and delete any drink
+      4.2. Barista, who can only display drinks but without the ability to do any further action
   5. Drinks are added and displayed by their titles and recipes, each recipe shall have a list of components from which it is composed
   6. Drinks are displayed in colors corresponding to their recipes
   7. Users have the ability to Logout and Login and each time they are authenticated
